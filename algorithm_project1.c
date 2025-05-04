@@ -1,5 +1,5 @@
 #include <stdio.h>
-//kontrol amaçlý print fonksiyonu
+//kontrol amaÃ§lÄ± print fonksiyonu
 printArray(int* arr, int size){
 	int i;
 	printf("\n");
@@ -136,19 +136,22 @@ int find_maj_hashing(int arr[], int size){
 	for(i = 1; i < size; i++)
 		if (arr[i] > max) max = arr[i];
 		 
-	int hashTable[]={0};
-	int hash = max+1;
-	max = 0; 
-	for(i = 0; i < size; i++){
-		int x = arr[i] % hash;
-		if(++hashTable[x] > hashTable[max]) max = x; 
-	}
-	return hash-max-1;
+	int* hashTable;
+	hashTable = malloc(sizeof(int)*(max+1));
+	for(i = 0; i < size; i++)
+		hashTable[arr[i]] = 0; 
+		
+	max = arr[0]; 
+	for(i = 0; i < size; i++)
+		if(++hashTable[arr[i]] > hashTable[max]) max = arr[i];
+		
+	if(hashTable[max] > size/2) return max;
+	else return -1;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(){
-	int arr[] = {2,4,1,2,3,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2};
+	int arr[] = {0,1,1,1,2};
 	int size = sizeof(arr)/4;
 	puts("'majorities according to different algorithms'");
 	printf("brute force: %d\n", find_majority_brute_force(arr,size));
