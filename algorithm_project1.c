@@ -1,5 +1,5 @@
 #include <stdio.h>
-//kontrol amaçlı print fonksiyonu
+//kontrol amaÃ§lÄ± print fonksiyonu
 printArray(int* arr, int size){
 	int i;
 	printf("\n");
@@ -150,8 +150,32 @@ int find_maj_hashing(int arr[], int size){
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+int boyer_moore_majorty_vote(int arr[], int size){
+	int currentNumber = arr[0];
+	int counter = 0;
+	int i;
+	for(i = 0; i < size; i++){
+		if(currentNumber == arr[i]) counter++;
+		else{
+			counter --;
+			if(counter <= 0){
+				if(i == size-1) return -1;
+				else currentNumber = arr[i+1];
+			}
+		}
+	}
+	int controllMaj = 0;
+	for(i = 0; i < size; i++){
+		if(arr[i] == currentNumber) controllMaj++;
+	}
+	if(controllMaj > size/2) return currentNumber;
+	return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 int main(){
-	int arr[] = {0,1,1,1,2};
+	int arr[] = {0,1,1,1,2,2};
 	int size = sizeof(arr)/4;
 	puts("'majorities according to different algorithms'");
 	printf("brute force: %d\n", find_majority_brute_force(arr,size));
@@ -160,4 +184,5 @@ int main(){
 	printf("quick sort: %d\n", find_maj_quick_sort(arr, 0, size-1, size));
 	printf("divide & conquer: %d\n", find_maj_divide_conquer(arr, 0, size-1, size));
 	printf("hashing: %d\n", find_maj_hashing(arr,size));
+	printf("Boyer Moore Majority Vote: %d\n", boyer_moore_majorty_vote(arr,size));
 }
