@@ -1,12 +1,13 @@
 #include <stdio.h>
-//kontrol amaÃ§lÄ± print fonksiyonu
-printArray(int* arr, int size){
-	int i;
-	printf("\n");
-	for(i = 0; i < size; i++){
-		printf("%d ", arr[i]);
-	}
-	printf("\n");
+#include <time.h>
+
+int checkIfMaj(int* arr, int size, int candidate){
+	int i, count = 0;
+	for(i = 0; i < size; i++)
+		if(arr[i] == candidate) count++;
+		
+	if (count > size/2) return candidate;
+	else return -1;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -175,14 +176,26 @@ int boyer_moore_majorty_vote(int arr[], int size){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(){
-	int arr[] = {0,1,1,1,2,2};
+	clock_t start, end;
+	int arr[] = {0,1, 1, 1,1,2,2};
 	int size = sizeof(arr)/4;
 	puts("'majorities according to different algorithms'");
-	printf("brute force: %d\n", find_majority_brute_force(arr,size));
-	printf("insertion sort: %d\n", find_maj_insertion_sort(arr,size));
-	printf("merge sort: %d\n", find_maj_merge_sort(arr,size));
-	printf("quick sort: %d\n", find_maj_quick_sort(arr, 0, size-1, size));
-	printf("divide & conquer: %d\n", find_maj_divide_conquer(arr, 0, size-1, size));
-	printf("hashing: %d\n", find_maj_hashing(arr,size));
-	printf("Boyer Moore Majority Vote: %d\n", boyer_moore_majorty_vote(arr,size));
+	
+	start = clock();
+	int i;
+	for(i = 0; i < 100000000; i++)
+		find_majority_brute_force(arr,size);
+	
+	end = clock();
+
+    double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+    printf("Elapsed CPU time: %.6f seconds\n", elapsed);
+	
+	
+	//printf("insertion sort: %d\n", checkIfMaj(arr, size, find_maj_insertion_sort(arr,size)));
+	//printf("merge sort: %d\n", checkIfMaj(arr, size, find_maj_merge_sort(arr,size)));
+	//printf("quick sort: %d\n", checkIfMaj(arr, size, find_maj_quick_sort(arr, 0, size-1, size)));
+	//printf("divide & conquer: %d\n", checkIfMaj(arr, size, find_maj_divide_conquer(arr, 0, size-1, size)));
+	//printf("hashing: %d\n", find_maj_hashing(arr,size));
+	//printf("Boyer Moore Majority Vote: %d\n", boyer_moore_majorty_vote(arr,size));
 }
