@@ -11,30 +11,28 @@ struct StNode{
 typedef struct StNode StNode;
 typedef StNode *StNodePtr;
 
-StNodePtr Insert(StNodePtr, int, StNodePtr *, int *);
-void Splay(StNodePtr *, StNodePtr *, int *);
+StNodePtr Insert(StNodePtr, int, StNodePtr *);
+void Splay(StNodePtr *, StNodePtr *);
 void leftRotation(StNodePtr *, StNodePtr *);
 void rightRotation(StNodePtr *, StNodePtr *);
 
 int main(int argc, char *argv[]){
-	int inNumber;
-	int TimeForModSplay = 0;
-
+	int inNumber, i;
+	int arr[] = {0,1,1,1,1,2,2};
+	int size = sizeof(arr)/4;
 	StNodePtr modRoot = NULL;
 	StNodePtr modLastAdded = NULL;
 
-	FILE *file = fopen("input.txt", "r");
-	FILE *output = fopen("output.txt", "w");
-
-	while (fscanf(file, "%d,", &inNumber) == 1){
-		modRoot = Insert(modRoot, inNumber, &modLastAdded, &TimeForModSplay);
+	for (i = 0; i < size; i++){
+		modRoot = Insert(modRoot, arr[i], &modLastAdded);
 		if (modRoot->freq < modLastAdded->freq)
-			Splay(&modRoot, &modLastAdded, &TimeForModSplay);
+			Splay(&modRoot, &modLastAdded);
 	}
-	fprintf(output, "\n Pre-order demonstration of mod-splay tree: ");
-	fprintf(output, "Majority Element: %d", modRoot->data);
-	fprintf(output, "\n Comparison time of mod-splay tree: %d", TimeForModSplay);
+	printf("Majority Element:");
+	if(modRoot->freq > size/2) printf(" %d", modRoot->data); 
+	else puts(" -1");
 }
+
 void leftRotation(StNodePtr *lastAdded, StNodePtr *root){
 	// to perform left rotation lastAdded must be right child of its parent.
 	(*lastAdded)->parent->right = (*lastAdded)->left;	 // the left child of lastAdded is in the right of the parent of the lastAdded. After rotation its right child must be on the right of the former parent of lastAdded.
@@ -75,66 +73,57 @@ void rightRotation(StNodePtr *lastAdded, StNodePtr *root){
 			(*lastAdded)->parent->right = (*lastAdded);
 	}
 }
-void Splay(StNodePtr *root, StNodePtr *lastAdded, int *cTime){
+void Splay(StNodePtr *root, StNodePtr *lastAdded){
 	if ((*lastAdded)->parent != NULL){
 		if ((*lastAdded)->parent->parent == NULL){ // For zig rotation
 			if ((*lastAdded)->parent->left != NULL && (*lastAdded)->parent->left->data == (*lastAdded)->data){
 				rightRotation(lastAdded, root);
-				(*cTime)++;
 			}
 			else if ((*lastAdded)->parent->right != NULL && (*lastAdded)->parent->right->data == (*lastAdded)->data){
 				leftRotation(lastAdded, root);
-				(*cTime)++;
 			}
 		}
 		else if ((*lastAdded)->parent->parent->left != NULL && (*lastAdded)->parent->parent->left->left != NULL && (*lastAdded)->parent->parent->left->left->data == (*lastAdded)->data){ // If lastAdded, parent and grandparent construct successive right directed line perform zigzig
 			rightRotation(&((*lastAdded)->parent), root);
 			rightRotation(lastAdded, root);
-			*cTime += 2;
-			Splay(root, lastAdded, cTime);
+			Splay(root, lastAdded);
 		}
 		else if ((*lastAdded)->parent->parent->right != NULL && (*lastAdded)->parent->parent->right->right != NULL && (*lastAdded)->parent->parent->right->right->data == (*lastAdded)->data){ // If lastAdded, parent and grandparent construct successive left directed line perform zigzig
 			leftRotation(&((*lastAdded)->parent), root);
 			leftRotation(lastAdded, root);
-			*cTime += 2;
-			Splay(root, lastAdded, cTime);
+			Splay(root, lastAdded);
 		}
 		// check if it provides the condition for zigzag case
 		else if ((*lastAdded)->parent->parent->left != NULL && (*lastAdded)->parent->parent->left->right != NULL && (*lastAdded)->parent->parent->left->right->data == (*lastAdded)->data){
 			leftRotation(lastAdded, root);
 			rightRotation(lastAdded, root);
-			*cTime += 2;
-			Splay(root, lastAdded, cTime);
+			Splay(root, lastAdded);
 		}
 		else if ((*lastAdded)->parent->parent->right != NULL && (*lastAdded)->parent->parent->right->left != NULL && (*lastAdded)->parent->parent->right->left->data == (*lastAdded)->data){
 			rightRotation(lastAdded, root);
 			leftRotation(lastAdded, root);
-			*cTime += 2;
-			Splay(root, lastAdded, cTime);
+			Splay(root, lastAdded);
 		}
 	}
 }
-StNodePtr Insert(StNodePtr root, int data, StNodePtr *lastAdded, int *cTime){
+StNodePtr Insert(StNodePtr root, int data, StNodePtr *lastAdded){
 	if (root == NULL){
 		StNodePtr newNode = malloc(sizeof(StNode));
 		newNode->data = data;
-		newNode->freq = 0;
+		newNode->freq = 1;
 		newNode->left = newNode->right = newNode->parent = NULL;
 		*lastAdded = newNode;
 		return newNode;
 	}
 	else if(data < root->data){
-		(*cTime)++;
-		root->left = Insert(root->left, data, lastAdded, cTime);
+		root->left = Insert(root->left, data, lastAdded);
 		root->left->parent = root;
 	}
 	else if (data > root->data){
-		(*cTime)++;
-		root->right = Insert(root->right, data, lastAdded, cTime);
+		root->right = Insert(root->right, data, lastAdded);
 		root->right->parent = root;
 	}
 	else if (data == root->data){
-		(*cTime)++;
 		(root->freq)++;
 		*lastAdded = root;
 	}
