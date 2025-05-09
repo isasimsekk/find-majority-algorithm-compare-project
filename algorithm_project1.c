@@ -132,22 +132,57 @@ int find_maj_divide_conquer(int arr[], int start, int end, int size){
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-int find_maj_hashing(int arr[], int size){
-	int max = arr[0], i;
-	for(i = 1; i < size; i++)
-		if (arr[i] > max) max = arr[i];
-		 
-	int* hashTable;
-	hashTable = malloc(sizeof(int)*(max+1));
-	for(i = 0; i < size; i++)
-		hashTable[arr[i]] = 0; 
-		
-	max = arr[0]; 
-	for(i = 0; i < size; i++)
-		if(++hashTable[arr[i]] > hashTable[max]) max = arr[i];
-		
-	if(hashTable[max] > size/2) return max;
-	else return -1;
+typedef struct {
+    int value;
+    int freq;
+} HashCell;
+
+int isPrime(int n) {
+    if (n <= 1) return 0;
+	int i;
+    for (i = 2; i <= n*n; i++)
+        if (n % i == 0) return 0;
+    return 1;
+}
+int nextPrime(int n) {
+    while (!isPrime(n)) n++;
+    return n;
+}
+
+void addToHash(HashCell *hashTable, int hashSize,int value) {
+    int index = value % hashSize;
+    while (hashTable[index].freq >= 1) {
+        if (hashTable[index].value == value) {
+            hashTable[index].freq++;
+            return;
+        }
+        index = (index + 1) % hashSize;
+    }
+    hashTable[index].value = value;
+    hashTable[index].freq = 1;
+}
+
+int find_maj_hash(int arr[], int arr_size) {
+	int i;
+    int hashSize = nextPrime(arr_size * 2);
+    HashCell *hashTable = calloc(hashSize, sizeof(HashCell));
+    if (hashTable == NULL) {
+        printf("Memory allocation failed.\n");
+        return -1;
+    }
+
+    for (i = 0; i < arr_size; i++) {
+        addToHash(hashTable, hashSize, arr[i]);
+    }
+    for (i = 0; i < hashSize; i++) {
+        if (hashTable[i].freq > arr_size / 2) {
+            int majority = hashTable[i].value;
+            free(hashTable);
+            return majority;
+        }
+    }
+    free(hashTable);
+    return -1;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -196,6 +231,6 @@ int main(){
 	//printf("merge sort: %d\n", checkIfMaj(arr, size, find_maj_merge_sort(arr,size)));
 	//printf("quick sort: %d\n", checkIfMaj(arr, size, find_maj_quick_sort(arr, 0, size-1, size)));
 	//printf("divide & conquer: %d\n", checkIfMaj(arr, size, find_maj_divide_conquer(arr, 0, size-1, size)));
-	//printf("hashing: %d\n", find_maj_hashing(arr,size));
+	printf("hashing: %d\n", find_maj_hash(arr,size));
 	//printf("Boyer Moore Majority Vote: %d\n", boyer_moore_majorty_vote(arr,size));
 }
