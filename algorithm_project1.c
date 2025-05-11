@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <time.h>
+#include <stdlib.h>
+#include <windows.h>
 void print_array(int *arr, int size) {
 	int i;
 	puts(" ");
@@ -27,7 +28,7 @@ int checkIfMaj(int* arr, int size, int candidate){
 	int i, count = 0;
 	for(i = 0; i < size; i++)
 		if(arr[i] == candidate) count++;
-		
+
 	if (count > size/2) return candidate;
 	else return -1;
 }
@@ -70,7 +71,7 @@ int merge(int* merged, int* rightSubArray, int right_size, int* leftSubArray, in
 			merged[x++] = leftSubArray[bx++];
 	}
 	if(ax >= right_size)
-		while(bx < left_size) 
+		while(bx < left_size)
 			merged[x++] = leftSubArray[bx++];
 	else
 		while(ax < right_size)
@@ -92,12 +93,12 @@ int find_maj_merge_sort(int arr[], int size){
 		int leftSubArray[left_size];
 		int right_size = (size%2) ? size/2+1 : size/2;
 		int rightSubArray[right_size];
-		
+
 		copyArr(arr, size, rightSubArray, right_size, leftSubArray);
-		
+
 		find_maj_merge_sort(rightSubArray, right_size);
 		find_maj_merge_sort(leftSubArray, left_size);
-		
+
 		merge(arr, rightSubArray, right_size, leftSubArray, left_size);
 	}
 	return arr[size/2];
@@ -133,7 +134,7 @@ int find_maj_quick_sort(int arr[], int start, int end, int size){
 	if (start >= end) return arr[size/2];
 	int m = partition(arr, start ,end);
 	find_maj_quick_sort(arr, start, m-1, size);
-	find_maj_quick_sort(arr, m+1, end, size);			
+	find_maj_quick_sort(arr, m+1, end, size);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -233,7 +234,7 @@ int boyer_moore_majorty_vote(int arr[], int size){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(){
-	    FILE* file = fopen("input.txt", "r");
+	    FILE* file = fopen("input_arrays.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
@@ -243,14 +244,7 @@ int main(){
         printf("Error opening file\n");
         return 1;
     }
-    fclose(f);
-        f = fopen("output.txt", "a");
-    if (f == NULL) {
-        printf("Error opening file\n");
-        return 1;
-    }
-
-    int size = 0;
+	int size = 0;
     char ch;
     while (fscanf(file, "size= %d", &size) == 1) {
         int *arr = malloc(size * sizeof(int));
@@ -260,34 +254,29 @@ int main(){
             return 1;
         }
         read_array(file, arr, size);
-        //print_array(arr, size); 
+        //print_array(arr, size);
 		
-		
-		
-		clock_t start, end;
-	
-		start = clock();
-		int i;
-		for(i = 0; i < 1000000; i++)
-			find_maj_hash(arr,size);			//our algorithm runs here
-	
-		end = clock();
+    	LARGE_INTEGER freq, start, end;
+    	QueryPerformanceFrequency(&freq); // Get the frequency (ticks per second)
+    	QueryPerformanceCounter(&start);  // Start timer
 
-    	double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
-    	printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-		fprintf(f, "%d %.6f\n", size, elapsed);
-		
-		
-		
-        free(arr);  
+		int i;
+		for(i = 0; i < 100; i++)
+			find_majority_brute_force(arr,size);			//our algorithm runs here
+
+    	QueryPerformanceCounter(&end);    // End timer
+
+    	double elapsed = (double)(end.QuadPart - start.QuadPart) / freq.QuadPart;
+    	printf("Elapsed time: %.9f seconds; Size: %d\n", elapsed, size);
+    	fprintf(f, "%d %.9f\n", size, elapsed);
+
+        free(arr);
         while ((ch = fgetc(file)) != '\n' && ch != EOF);
     }
 
     fclose(file);
 	fclose(f);
-	
-	
-	
+
 	//printf("brute force: %d\n", find_majority_brute_force(arr,size));
 	//printf("insertion sort: %d\n", checkIfMaj(arr, size, find_maj_insertion_sort(arr,size)));
 	//printf("merge sort: %d\n", checkIfMaj(arr, size, find_maj_merge_sort(arr,size)));
