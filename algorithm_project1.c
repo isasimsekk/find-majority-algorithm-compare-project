@@ -233,7 +233,7 @@ int boyer_moore_majorty_vote(int arr[], int size){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(){
-	    FILE* file = fopen("input.txt", "r");
+	    FILE* file = fopen("input_arrays.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
