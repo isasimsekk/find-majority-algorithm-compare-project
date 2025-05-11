@@ -275,7 +275,7 @@ int main(){
 
     	double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     	printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-		fprintf(f, "size: %d, %.6f\n", size, elapsed);
+	fprintf(f, "size: %d, %.6f\n", size, elapsed);
 		
 		
 		
@@ -284,7 +284,7 @@ int main(){
     }
 
     fclose(file);
-	fclose(f);
+    fclose(f);
 	
 	//printf("insertion sort: %d\n", checkIfMaj(arr, size, find_maj_insertion_sort(arr,size)));
 	//printf("merge sort: %d\n", checkIfMaj(arr, size, find_maj_merge_sort(arr,size)));
