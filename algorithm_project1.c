@@ -162,7 +162,7 @@ typedef struct {
 int isPrime(int n) {
     if (n <= 1) return 0;
 	int i;
-    for (i = 2; i <= n*n; i++)
+    for (i = 2; i*i <= n; i++)
         if (n % i == 0) return 0;
     return 1;
 }
@@ -269,13 +269,13 @@ int main(){
 		start = clock();
 		int i;
 		for(i = 0; i < 1000000; i++)
-			find_majority_brute_force(arr,size);			//our algorithm runs here
+			find_maj_hash(arr,size);			//our algorithm runs here
 	
 		end = clock();
 
     	double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     	printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-	fprintf(f, "size: %d, %.6f\n", size, elapsed);
+		fprintf(f, "size: %d, %.6f\n", size, elapsed);
 		
 		
 		
@@ -284,8 +284,11 @@ int main(){
     }
 
     fclose(file);
-    fclose(f);
+	fclose(f);
 	
+	
+	
+	//printf("brute force: %d\n", find_majority_brute_force(arr,size));
 	//printf("insertion sort: %d\n", checkIfMaj(arr, size, find_maj_insertion_sort(arr,size)));
 	//printf("merge sort: %d\n", checkIfMaj(arr, size, find_maj_merge_sort(arr,size)));
 	//printf("quick sort: %d\n", checkIfMaj(arr, size, find_maj_quick_sort(arr, 0, size-1, size)));
