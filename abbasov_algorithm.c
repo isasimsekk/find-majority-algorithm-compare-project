@@ -1,5 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
+
+void read_array(FILE *fp, int *arr, int size) {
+    char ch;
+    int i = 0;
+    while ((ch = fgetc(fp)) != '[' && ch != EOF);
+
+    while (i < size && fscanf(fp, "%d", &arr[i]) == 1) {
+        i++;
+        while ((ch = fgetc(fp)) != ',' && ch != ']' && ch != EOF);
+        if (ch == ']') break;
+    }
+}
 
 struct StNode{
 	int data;
@@ -18,19 +31,59 @@ void rightRotation(StNodePtr *, StNodePtr *);
 
 int main(int argc, char *argv[]){
 	int inNumber, i;
-	int arr[] = {0,1,1,1,1,2,2};
-	int size = sizeof(arr)/4;
-	StNodePtr modRoot = NULL;
-	StNodePtr modLastAdded = NULL;
+	FILE* file = fopen("input.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
 
-	for (i = 0; i < size; i++){
-		modRoot = Insert(modRoot, arr[i], &modLastAdded);
-		if (modRoot->freq < modLastAdded->freq)
-			Splay(&modRoot, &modLastAdded);
-	}
-	printf("Majority Element:");
-	if(modRoot->freq > size/2) printf(" %d", modRoot->data); 
-	else puts(" -1");
+    int size = 0;
+    char ch;
+    while (fscanf(file, "size= %d", &size) == 1) {
+        int *arr = malloc(size * sizeof(int));
+        if (!arr) {
+            printf("Memory allocation failed\n");
+            fclose(file);
+            return 1;
+        }
+        read_array(file, arr, size);
+        //print_array(arr, size); 
+		
+		
+		
+		clock_t start, end;
+	
+		start = clock();
+		int i;
+		for(i = 0; i < 100; i++){
+			StNodePtr modRoot = NULL;
+			StNodePtr modLastAdded = NULL;
+
+			for (i = 0; i < size; i++){
+				modRoot = Insert(modRoot, arr[i], &modLastAdded);
+				if (modRoot->freq < modLastAdded->freq)
+					Splay(&modRoot, &modLastAdded);
+				}
+			//printf("Majority Element:");
+			//if(modRoot->freq > size/2) printf(" %d", modRoot->data); 
+			//else puts(" -1");
+		}
+			
+	
+		end = clock();
+
+    	double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+    	printf("Elapsed CPU time: %.6f seconds\n", elapsed);
+		
+		
+		
+		
+        free(arr);  
+        while ((ch = fgetc(file)) != '\n' && ch != EOF);
+    }
+
+    fclose(file);
+	
 }
 
 void leftRotation(StNodePtr *lastAdded, StNodePtr *root){
