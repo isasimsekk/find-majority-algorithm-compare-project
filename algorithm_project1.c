@@ -1,5 +1,27 @@
 #include <stdio.h>
 #include <time.h>
+void print_array(int *arr, int size) {
+	int i;
+	puts(" ");
+    for (i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+void read_array(FILE *fp, int *arr, int size) {
+    char ch;
+    int i = 0;
+    while ((ch = fgetc(fp)) != '[' && ch != EOF);
+
+    while (i < size && fscanf(fp, "%d", &arr[i]) == 1) {
+        i++;
+        while ((ch = fgetc(fp)) != ',' && ch != ']' && ch != EOF);
+        if (ch == ']') break;
+    }
+}
+
+
 
 int checkIfMaj(int* arr, int size, int candidate){
 	int i, count = 0;
@@ -140,7 +162,7 @@ typedef struct {
 int isPrime(int n) {
     if (n <= 1) return 0;
 	int i;
-    for (i = 2; i*i <= n; i++)
+    for (i = 2; i <= n*n; i++)
         if (n % i == 0) return 0;
     return 1;
 }
@@ -193,7 +215,7 @@ int boyer_moore_majorty_vote(int arr[], int size){
 	for(i = 0; i < size; i++){
 		if(currentNumber == arr[i]) counter++;
 		else{
-			counter --;
+			counter--;
 			if(counter <= 0){
 				if(i == size-1) return -1;
 				else currentNumber = arr[i+1];
@@ -211,26 +233,52 @@ int boyer_moore_majorty_vote(int arr[], int size){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(){
-	clock_t start, end;
-	int arr[] = {0,1, 1, 1,1,2,2};
-	int size = sizeof(arr)/4;
-	puts("'majorities according to different algorithms'");
-	
-	start = clock();
-	int i;
-	for(i = 0; i < 100000000; i++)
-		find_majority_brute_force(arr,size);
-	
-	end = clock();
+	    FILE* file = fopen("input.txt", "r");
+    if (file == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
 
-    double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
-    printf("Elapsed CPU time: %.6f seconds\n", elapsed);
+    int size = 0;
+    char ch;
+    while (fscanf(file, "size= %d", &size) == 1) {
+        int *arr = malloc(size * sizeof(int));
+        if (!arr) {
+            printf("Memory allocation failed\n");
+            fclose(file);
+            return 1;
+        }
+        read_array(file, arr, size);
+        //print_array(arr, size); 
+		
+		
+		
+		clock_t start, end;
+	
+		start = clock();
+		int i;
+		for(i = 0; i < 1000000; i++)
+			find_majority_brute_force(arr,size);
+	
+		end = clock();
+
+    	double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+    	printf("Elapsed CPU time: %.6f seconds\n", elapsed);
+		
+		
+		
+		
+        free(arr);  
+        while ((ch = fgetc(file)) != '\n' && ch != EOF);
+    }
+
+    fclose(file);
 	
 	
 	//printf("insertion sort: %d\n", checkIfMaj(arr, size, find_maj_insertion_sort(arr,size)));
 	//printf("merge sort: %d\n", checkIfMaj(arr, size, find_maj_merge_sort(arr,size)));
 	//printf("quick sort: %d\n", checkIfMaj(arr, size, find_maj_quick_sort(arr, 0, size-1, size)));
 	//printf("divide & conquer: %d\n", checkIfMaj(arr, size, find_maj_divide_conquer(arr, 0, size-1, size)));
-	printf("hashing: %d\n", find_maj_hash(arr,size));
+	//printf("hashing: %d\n", find_maj_hash(arr,size));
 	//printf("Boyer Moore Majority Vote: %d\n", boyer_moore_majorty_vote(arr,size));
 }
