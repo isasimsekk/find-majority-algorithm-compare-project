@@ -31,7 +31,7 @@ void rightRotation(StNodePtr *, StNodePtr *);
 
 int main(int argc, char *argv[]){
 	int inNumber, i;
-	FILE* file = fopen("input.txt", "r");
+	FILE* file = fopen("input_arrays.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
