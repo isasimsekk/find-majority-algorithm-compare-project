@@ -64,9 +64,11 @@ int main(int argc, char *argv[]){
 				if (modRoot->freq < modLastAdded->freq)
 					Splay(&modRoot, &modLastAdded);
 				}
+			
 			//printf("Majority Element:");
 			//if(modRoot->freq > size/2) printf(" %d", modRoot->data); 
 			//else puts(" -1");
+			freeBST(modRoot);
 		}
 			
 	
@@ -181,4 +183,13 @@ StNodePtr Insert(StNodePtr root, int data, StNodePtr *lastAdded){
 		*lastAdded = root;
 	}
 	return root;
+}
+void freeBST(Node* root) {
+    if (root == NULL) {
+        return;
+    }
+    freeBST(root->left);
+    freeBST(root->right);
+	
+    free(root);
 }
