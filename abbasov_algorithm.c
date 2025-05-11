@@ -184,7 +184,7 @@ StNodePtr Insert(StNodePtr root, int data, StNodePtr *lastAdded){
 	}
 	return root;
 }
-void freeBST(Node* root) {
+void freeBST(StNodePtr root) {
     if (root == NULL) {
         return;
     }
