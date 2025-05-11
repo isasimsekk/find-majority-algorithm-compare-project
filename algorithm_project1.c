@@ -233,8 +233,19 @@ int boyer_moore_majorty_vote(int arr[], int size){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 int main(){
-	    FILE* file = fopen("input_arrays.txt", "r");
+	    FILE* file = fopen("input.txt", "r");
     if (file == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
+        FILE* f = fopen("output.txt", "w");
+    if (f == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
+    fclose(f);
+        f = fopen("output.txt", "a");
+    if (f == NULL) {
         printf("Error opening file\n");
         return 1;
     }
@@ -258,13 +269,13 @@ int main(){
 		start = clock();
 		int i;
 		for(i = 0; i < 1000000; i++)
-			find_majority_brute_force(arr,size);
+			find_majority_brute_force(arr,size);			//our algorithm runs here
 	
 		end = clock();
 
     	double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
     	printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-		
+		fprintf(f, "size: %d, %.6f\n", size, elapsed);
 		
 		
 		
@@ -273,7 +284,7 @@ int main(){
     }
 
     fclose(file);
-	
+	fclose(f);
 	
 	//printf("insertion sort: %d\n", checkIfMaj(arr, size, find_maj_insertion_sort(arr,size)));
 	//printf("merge sort: %d\n", checkIfMaj(arr, size, find_maj_merge_sort(arr,size)));
