@@ -52,9 +52,9 @@ def ratio_array_with_majority(size, majority_element, majority_ratio):
 
     remaining_count = size - majority_count
     for _ in range(remaining_count):
-        value = random.randint(0, 99)
+        value = random.randint(0, maxNumber)
         while value == majority_element:
-            value = random.randint(0, 99)
+            value = random.randint(0, maxNumber)
         arr.append(value)
 
     return arr
@@ -63,9 +63,9 @@ def arr_with_majority(arr, size, majority_element):
     arr[:(size // 2) + 1] = [majority_element] * ((size // 2) + 1)
 
     for i in range((size // 2) + 1, size):
-        arr[i] = random.randint(0, 99)
+        arr[i] = random.randint(0, maxNumber)
         while arr[i] == majority_element:
-            arr[i] = random.randint(0, 99)
+            arr[i] = random.randint(0, maxNumber)
 
 
 def generate(size):
