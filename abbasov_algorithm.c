@@ -14,24 +14,24 @@ void read_array(FILE *fp, int *arr, int size) {
     }
 }
 
-struct StNode{
-	int data;
-	int freq;
-	struct StNode *parent;
-	struct StNode *left;
-	struct StNode *right;
+struct StNode {
+    int data;
+    int freq;
+    struct StNode *parent;
+    struct StNode *left;
+    struct StNode *right;
 };
 typedef struct StNode StNode;
-typedef StNode *StNodePtr;
+typedef StNode* StNodePtr;
 
 StNodePtr Insert(StNodePtr, int, StNodePtr *);
 void Splay(StNodePtr *, StNodePtr *);
 void leftRotation(StNodePtr *, StNodePtr *);
 void rightRotation(StNodePtr *, StNodePtr *);
+void freeBST(StNodePtr);
 
-int main(int argc, char *argv[]){
-	int inNumber, i;
-	FILE* file = fopen("input_arrays.txt", "r");
+int main() {
+    FILE* file = fopen("input.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
@@ -46,46 +46,36 @@ int main(int argc, char *argv[]){
             fclose(file);
             return 1;
         }
+
         read_array(file, arr, size);
-        //print_array(arr, size); 
-		
-		
-		
-		clock_t start, end;
-	
-		start = clock();
+
+        clock_t start = clock();
 		int i;
-		for(i = 0; i < 100; i++){
-			StNodePtr modRoot = NULL;
-			StNodePtr modLastAdded = NULL;
+		int j;
+        for (i = 0; i < 100000; i++) {
+            StNodePtr modRoot = NULL;
+            StNodePtr modLastAdded = NULL;
 
-			for (i = 0; i < size; i++){
-				modRoot = Insert(modRoot, arr[i], &modLastAdded);
-				if (modRoot->freq < modLastAdded->freq)
-					Splay(&modRoot, &modLastAdded);
-				}
-			
-			//printf("Majority Element:");
-			//if(modRoot->freq > size/2) printf(" %d", modRoot->data); 
-			//else puts(" -1");
-			freeBST(modRoot);
-		}
-			
-	
-		end = clock();
+            for (j = 0; j < size; j++) {
+                modRoot = Insert(modRoot, arr[j], &modLastAdded);
+                Splay(&modRoot, &modLastAdded); // Splay every time
+            }
 
-    	double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
-    	printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-		
-		
-		
-		
-        free(arr);  
+            freeBST(modRoot);
+        }
+
+        clock_t end = clock();
+
+        double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
+        printf("Elapsed CPU time: %.6f seconds\n", elapsed);
+
+        free(arr);
+
         while ((ch = fgetc(file)) != '\n' && ch != EOF);
     }
 
     fclose(file);
-	
+    return 0;
 }
 
 void leftRotation(StNodePtr *lastAdded, StNodePtr *root){
@@ -185,11 +175,16 @@ StNodePtr Insert(StNodePtr root, int data, StNodePtr *lastAdded){
 	return root;
 }
 void freeBST(StNodePtr root) {
-    if (root == NULL) {
-        return;
-    }
-    freeBST(root->left);
-    freeBST(root->right);
-	
+    if (root == NULL) return;
+
+    StNodePtr left = root->left;
+    StNodePtr right = root->right;
+
+    root->left = NULL;
+    root->right = NULL;
+
     free(root);
+
+    freeBST(left);
+    freeBST(right);
 }
