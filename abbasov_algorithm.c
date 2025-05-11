@@ -78,7 +78,7 @@ int main() {
 
         double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
         printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-		fprintf(f, "size: %d, %.6f\n", size, elapsed);
+		fprintf(f, "%d %.6f\n", size, elapsed);
         
 		
 		free(arr);
