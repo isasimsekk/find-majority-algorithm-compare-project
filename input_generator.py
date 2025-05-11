@@ -52,9 +52,9 @@ def ratio_array_with_majority(size, majority_element, majority_ratio):
 
     remaining_count = size - majority_count
     for _ in range(remaining_count):
-        value = random.randint(0, maxNumber)
+        value = random.randint(0, 99)
         while value == majority_element:
-            value = random.randint(0, maxNumber)
+            value = random.randint(0, 99)
         arr.append(value)
 
     return arr
@@ -63,9 +63,9 @@ def arr_with_majority(arr, size, majority_element):
     arr[:(size // 2) + 1] = [majority_element] * ((size // 2) + 1)
 
     for i in range((size // 2) + 1, size):
-        arr[i] = random.randint(0, maxNumber)
+        arr[i] = random.randint(0, 99)
         while arr[i] == majority_element:
-            arr[i] = random.randint(0, maxNumber)
+            arr[i] = random.randint(0, 99)
 
 
 def generate(size):
@@ -158,6 +158,8 @@ def generate(size):
         arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
 
-sizes = [10,15,30,40,50]
+sizes = []
+for size in range(200,10001,200):
+    sizes.append(size)
 for size in sizes:
     generate(size)
