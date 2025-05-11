@@ -36,7 +36,17 @@ int main() {
         printf("Error opening file\n");
         return 1;
     }
-
+	   FILE* f = fopen("output.txt", "w");
+    if (f == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
+    fclose(f);
+        f = fopen("output.txt", "a");
+    if (f == NULL) {
+        printf("Error opening file\n");
+        return 1;
+    }
     int size = 0;
     char ch;
     while (fscanf(file, "size= %d", &size) == 1) {
@@ -68,13 +78,16 @@ int main() {
 
         double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
         printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-
-        free(arr);
+		fprintf(f, "size: %d, %.6f\n", size, elapsed);
+        
+		
+		free(arr);
 
         while ((ch = fgetc(file)) != '\n' && ch != EOF);
     }
 
     fclose(file);
+    fclose(f);
     return 0;
 }
 
