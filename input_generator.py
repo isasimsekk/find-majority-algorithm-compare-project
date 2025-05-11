@@ -3,6 +3,8 @@ file = 'input_arrays.txt'
 with open(file, 'w') as f:
     pass
 
+maxNumber = 1000
+
 def generate_pattern(size):
     arr = []
     current_num = 1
@@ -68,8 +70,8 @@ def arr_with_majority(arr, size, majority_element):
 
 def generate(size):
     with open('input_arrays.txt', 'a') as f:
-        arr = [random.randint(1, 100) for _ in range(size)]
-        arr2 = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
+        arr2 = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)  # worst brute force
 
         arr_with_majority(arr2, size, 7)
@@ -141,19 +143,19 @@ def generate(size):
         random.shuffle(arr)
         print("size=", size, arr, file = f)
 
-        arr = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
-        arr = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
-        arr = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
-        arr = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
-        arr = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
-        arr = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
-        arr = [random.randint(1, 100) for _ in range(size)]
+        arr = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)
 
 sizes = [10,15,30,40,50]
