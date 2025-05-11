@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <windows.h>
 
 void read_array(FILE *fp, int *arr, int size) {
     char ch;
@@ -31,22 +32,17 @@ void rightRotation(StNodePtr *, StNodePtr *);
 void freeBST(StNodePtr);
 
 int main() {
-    FILE* file = fopen("input.txt", "r");
+    FILE* file = fopen("input_arrays.txt", "r");
     if (file == NULL) {
         printf("Error opening file\n");
         return 1;
     }
-	   FILE* f = fopen("output.txt", "w");
+	FILE* f = fopen("output.txt", "w");
     if (f == NULL) {
         printf("Error opening file\n");
         return 1;
     }
-    fclose(f);
-        f = fopen("output.txt", "a");
-    if (f == NULL) {
-        printf("Error opening file\n");
-        return 1;
-    }
+
     int size = 0;
     char ch;
     while (fscanf(file, "size= %d", &size) == 1) {
@@ -59,10 +55,12 @@ int main() {
 
         read_array(file, arr, size);
 
-        clock_t start = clock();
+    	LARGE_INTEGER freq, start, end;
+    	QueryPerformanceFrequency(&freq); // Get the frequency (ticks per second)
+    	QueryPerformanceCounter(&start);  // Start timer
 		int i;
 		int j;
-        for (i = 0; i < 100000; i++) {
+        for (i = 0; i < 1000000; i++) {
             StNodePtr modRoot = NULL;
             StNodePtr modLastAdded = NULL;
 
@@ -74,13 +72,13 @@ int main() {
             freeBST(modRoot);
         }
 
-        clock_t end = clock();
+    	QueryPerformanceCounter(&end);    // End timer
 
-        double elapsed = ((double)(end - start)) / CLOCKS_PER_SEC;
-        printf("Elapsed CPU time: %.6f seconds\n", elapsed);
-		fprintf(f, "%d %.6f\n", size, elapsed);
-        
-		
+    	double elapsed = (double)(end.QuadPart - start.QuadPart) / freq.QuadPart;
+    	printf("Elapsed time: %.9f seconds; Size: %d\n", elapsed, size);
+    	fprintf(f, "%d %.9f\n", size, elapsed);
+
+
 		free(arr);
 
         while ((ch = fgetc(file)) != '\n' && ch != EOF);
@@ -190,14 +188,7 @@ StNodePtr Insert(StNodePtr root, int data, StNodePtr *lastAdded){
 void freeBST(StNodePtr root) {
     if (root == NULL) return;
 
-    StNodePtr left = root->left;
-    StNodePtr right = root->right;
-
-    root->left = NULL;
-    root->right = NULL;
-
-    free(root);
-
-    freeBST(left);
-    freeBST(right);
+    freeBST(root->left);
+    freeBST(root->right);
+	free(root);
 }
