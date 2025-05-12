@@ -74,7 +74,7 @@ def generate(size):
         arr2 = [random.randint(1, maxNumber) for _ in range(size)]
         print("size=", size, arr, file = f)  # worst brute force
 
-        arr_with_majority(arr2, size, 7)
+        arr_with_majority(arr2, size, 123)
         print("size=", size, arr2, file = f)  # best brute force
 
         arr.sort(reverse=1)
@@ -93,17 +93,14 @@ def generate(size):
         new_arr = construct_best_case_quick_sort(arr)
         print("size=", size, new_arr, file = f)
 
-        arr = [13] *size
-        print("size=", size, arr, file = f)    #hashing worst
-
-        majority = 7
+        majority = 123
         arr = [majority] * size
         print("size=", size, arr, file = f)  # best divide and conquer, also best for abbasov algorithm
 
         arr = generate_pattern(size)
         print("size=", size, arr, file = f)  # worst abbasov algorithm
 
-        arr = ratio_array_with_majority(size, 7, 0.65)
+        arr = ratio_array_with_majority(size, 123, 0.65)
         print("size=", size, arr, file = f)
         arr.sort()
         print("size=", size, arr, file = f)
@@ -112,11 +109,11 @@ def generate(size):
         random.shuffle(arr)
         print("size=", size, arr, file = f)
 
-        arr = ratio_array_with_majority(size, 7, ((size / 2) + 1) / size)
+        arr = ratio_array_with_majority(size, 123, ((size / 2) + 1) / size)
         random.shuffle(arr)
         print("size=", size, arr, file = f)
 
-        arr = ratio_array_with_majority(size, 7, 0.65)
+        arr = ratio_array_with_majority(size, 123, 0.65)
         print("size=", size, arr, file = f)
         arr.sort()
         print("size=", size, arr, file = f)
@@ -125,7 +122,7 @@ def generate(size):
         random.shuffle(arr)
         print("size=", size, arr, file = f)
 
-        arr = ratio_array_with_majority(size, 7, 0.75)
+        arr = ratio_array_with_majority(size, 123, 0.75)
         print("size=", size, arr, file = f)
         arr.sort()
         print("size=", size, arr, file = f)
@@ -134,7 +131,7 @@ def generate(size):
         random.shuffle(arr)
         print("size=", size, arr, file = f)
 
-        arr = ratio_array_with_majority(size, 7, 0.90)
+        arr = ratio_array_with_majority(size, 123, 0.90)
         print("size=", size, arr, file = f)
         arr.sort()
         print("size=", size, arr, file = f)
