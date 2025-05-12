@@ -10,7 +10,8 @@ def generate_pattern(size):
     current_num = 1
 
     while len(arr) < size:
-        arr.extend([current_num] * current_num)  # Add `current_num` repeated `current_num` times
+        x = random.randint(0, maxNumber)
+        arr.extend([x] * current_num)  # Add `current_num` repeated `current_num` times
         current_num += 1
 
     return arr[:size]
