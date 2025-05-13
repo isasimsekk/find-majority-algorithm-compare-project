@@ -60,14 +60,14 @@ int main() {
     	QueryPerformanceCounter(&start);  // Start timer
 		int i;
 		int j;
-        for (i = 0; i < 1000000; i++) {
+        for (i = 0; i < 100; i++) {
             StNodePtr modRoot = NULL;
             StNodePtr modLastAdded = NULL;
 
             for (j = 0; j < size; j++) {
                 modRoot = Insert(modRoot, arr[j], &modLastAdded);
-                Splay(&modRoot, &modLastAdded); // Splay every time
-            }
+            	if (modRoot->freq < modLastAdded->freq)
+            		Splay(&modRoot, &modLastAdded);            }
 
             freeBST(modRoot);
         }
