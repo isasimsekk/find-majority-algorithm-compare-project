@@ -1,3 +1,4 @@
 # Finding Majority Algorithm Experiment for different algorithms
 
-📄 [Read the full documentation (PDF)](report.pdf)
+<embed src="report.pdf" width="100%" height="600px" type="application/pdf">
+
