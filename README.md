@@ -1,1 +1,3 @@
-# find-majority-algorithm-compare-project
+# Finding Majority Algorithm Experiment for different algorithms
+
+📄 [Read the full documentation (PDF)](report.pdf)
